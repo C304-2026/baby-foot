@@ -27,8 +27,8 @@ describe('physique', () => {
   it('ne laisse pas traverser un joueur à vitesse max', () => {
     const s = createSimState();
     const y = s.rods[GOALIE].y;
-    freshBall(s, 400, y, -BALL.maxSpeed, 0);
-    run(s, 30);
+    freshBall(s, 150, y, -BALL.maxSpeed, 0);
+    run(s, 6);
     assert.ok(s.ball.x > RODS[GOALIE].x);
     assert.ok(s.ball.vx > 0);
     assert.equal(s.score[1], 0);

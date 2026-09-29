@@ -62,7 +62,7 @@ export class Bot {
       } else if (m.cooldown === 0 && r.phase === 'idle') {
         const front = dir * (b.x - def.x);
         const my = r.y + manOffset(def, best);
-        if (front > R - 6 && front < R + 26 && Math.abs(b.y - my) < 16 && Math.hypot(b.vx, b.vy) < 1800) {
+        if (front > R - 6 && front < R + 26 && Math.abs(b.y - my) < 16 && Math.hypot(b.vx, b.vy) < 1300) {
           m.holdTicks = 2 + Math.floor(this.rand() * 50 * this.skill);
           m.cooldown = 60;
           shoot = true;

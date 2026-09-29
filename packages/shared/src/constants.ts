@@ -18,13 +18,13 @@ export const GOAL_Y1 = GOAL_Y0 + FIELD.goalWidth;
 
 export const BALL = {
   radius: 17,
-  maxSpeed: 5200,
+  maxSpeed: 3200,
   /** Amortissement proportionnel (1/s). */
   linearDamping: 0.35,
   /** Décélération constante de roulement (u/s²). */
   rollingFriction: 45,
   wallRestitution: 0.72,
-  manRestitution: 0.45,
+  manRestitution: 0.35,
   manFriction: 0.15,
 } as const;
 
@@ -34,13 +34,13 @@ export const ROD = {
   footReach: 64,
   manRadius: 11,
   /** Vitesse max de translation (u/s) et accélération très forte : inertie quasi nulle. */
-  maxSpeed: 1800,
+  maxSpeed: 1300,
   accel: 32000,
   /** Au-delà de cet angle, le pied est levé : la balle passe dessous. */
   liftAngle: deg(62),
   /** Rotation pilotée par les flèches. */
   arrowAngle: deg(50),
-  rotSpeed: 16,
+  rotSpeed: 12,
   /** Pieds levés (touche dédiée). */
   liftedAngle: deg(85),
   liftSpeed: 22,
@@ -50,8 +50,8 @@ export const ROD = {
   windBackSpeed: 22,
   followThrough: deg(88),
   chargeTime: 0.7,
-  strikeOmegaMin: 26,
-  strikeOmegaMax: 70,
+  strikeOmegaMin: 18,
+  strikeOmegaMax: 44,
 } as const;
 
 export const CONTROL = {
@@ -60,7 +60,7 @@ export const CONTROL = {
   /** Marge de capture autour du joueur. */
   captureMargin: 6,
   /** Au-delà de cette vitesse relative, la balle est seulement amortie, pas collée. */
-  maxCaptureSpeed: 3200,
+  maxCaptureSpeed: 2400,
   /** Restitution quand on amortit une balle trop rapide pour être collée. */
   dampRestitution: 0.05,
   /** Durée du glissement de la balle vers sa position sous le pied (s). */
@@ -76,7 +76,7 @@ export const MATCH = {
   /** Balle immobile même atteignable : réengagement après ce délai (s). */
   stallTime: 6,
   deadBallSpeed: 15,
-  serveSpeed: 600,
+  serveSpeed: 450,
   /** Pentes des coins (hors de portée du gardien) qui ramènent la balle en jeu. */
   cornerSize: 150,
   cornerDepthY: 185,

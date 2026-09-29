@@ -52,19 +52,19 @@ export class Sfx {
   }
 
   hit(strength: number) {
-    const k = Math.min(1, strength / 4000);
+    const k = Math.min(1, strength / 2500);
     this.burst(1800 + 2200 * k, 1.2, 0.25 + 0.6 * k, 0.05 + 0.05 * k);
     this.tone(220 + 200 * k, 0.15 + 0.3 * k, 0.06, 'triangle', 0.5);
   }
 
   wall(strength: number) {
-    const k = Math.min(1, strength / 4000);
+    const k = Math.min(1, strength / 2500);
     this.burst(500, 2, 0.15 + 0.4 * k, 0.08);
     this.tone(110, 0.1 + 0.2 * k, 0.08, 'sine', 0.6);
   }
 
   post(strength: number) {
-    const k = Math.min(1, strength / 4000);
+    const k = Math.min(1, strength / 2500);
     this.tone(1400, 0.15 + 0.3 * k, 0.35, 'triangle', 0.98);
     this.tone(2100, 0.08 + 0.15 * k, 0.25, 'sine', 0.98);
   }

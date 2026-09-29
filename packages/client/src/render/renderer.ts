@@ -176,7 +176,7 @@ export class Renderer {
     const p = this.p;
     switch (e.type) {
       case 'hit': {
-        const k = Math.min(1, e.strength / 4000);
+        const k = Math.min(1, e.strength / 2500);
         this.fx.burst(p.x(e.x, e.y), p.y(e.y, BALL.radius), TEAM_COLORS[RODS[e.rod].team], 4 + k * 20, 60 + k * 420, this.p.scale);
         this.ballSquash = Math.max(this.ballSquash, 0.3 + k * 0.5);
         if (k > 0.55) this.shake = Math.max(this.shake, 4 + k * 10);
@@ -184,7 +184,7 @@ export class Renderer {
       }
       case 'wall':
       case 'post': {
-        const k = Math.min(1, e.strength / 4000);
+        const k = Math.min(1, e.strength / 2500);
         this.fx.burst(p.x(e.x, e.y), p.y(e.y, BALL.radius), e.type === 'post' ? 0xffe14d : 0xffffff, 2 + k * 8, 40 + k * 240, this.p.scale);
         this.ballSquash = Math.max(this.ballSquash, 0.2 + k * 0.4);
         break;
