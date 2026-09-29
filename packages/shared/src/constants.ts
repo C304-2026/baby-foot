@@ -25,6 +25,10 @@ export const BALL = {
   rollingFriction: 45,
   wallRestitution: 0.72,
   manRestitution: 0.35,
+  /** En dessous de cette vitesse d'impact (u/s), aucun rebond : la balle est poussée. */
+  softContactSpeed: 250,
+  /** Plage sur laquelle la restitution monte jusqu'à manRestitution. */
+  softContactRange: 1200,
   manFriction: 0.15,
 } as const;
 
@@ -35,7 +39,9 @@ export const ROD = {
   manRadius: 11,
   /** Vitesse max de translation (u/s) et accélération très forte : inertie quasi nulle. */
   maxSpeed: 1300,
-  accel: 32000,
+  /** Vitesse immédiate à l'appui, puis accélération jusqu'à maxSpeed. */
+  startSpeed: 220,
+  rampAccel: 3200,
   /** Au-delà de cet angle, le pied est levé : la balle passe dessous. */
   liftAngle: deg(62),
   /** Rotation pilotée par les flèches. */

@@ -90,10 +90,19 @@ function updateRod(s: SimState, i: number, cmd: RodCommand) {
   const r = s.rods[i];
   const dir = teamDir(def.team);
 
-  // Translation : cinématique, accélération très forte, butées sèches.
+  // Translation : démarrage immédiat mais lent, montée en vitesse progressive
+  // (dosage fin au tapotement), arrêt et changement de sens instantanés.
   const targetV = clamp(cmd.move, -1, 1) * ROD.maxSpeed;
-  const maxDv = ROD.accel * DT;
-  r.vy += clamp(targetV - r.vy, -maxDv, maxDv);
+  const speedingUp = targetV !== 0 && Math.sign(targetV) === Math.sign(r.vy) && Math.abs(targetV) > Math.abs(r.vy);
+  if (targetV === 0 || Math.sign(targetV) !== Math.sign(r.vy)) {
+    // Arrêt ou demi-tour : on repart de la vitesse de départ.
+    const start = Math.min(Math.abs(targetV), ROD.startSpeed);
+    r.vy = Math.sign(targetV) * start;
+  } else if (speedingUp) {
+    r.vy += Math.sign(targetV) * Math.min(ROD.rampAccel * DT, Math.abs(targetV) - Math.abs(r.vy));
+  } else {
+    r.vy = targetV;
+  }
   let y = r.y + r.vy * DT;
   if (y < def.minY) {
     y = def.minY;
@@ -302,7 +311,10 @@ function collideRod(
     b.x = cx + nx * rad;
     b.y = my + ny * rad;
     if (vn < 0) {
-      const e = cmd.control ? CONTROL.dampRestitution : BALL.manRestitution;
+      // Contact lent = amorti (la balle accompagne le pied), contact rapide = rebond.
+      const e = cmd.control
+        ? CONTROL.dampRestitution
+        : BALL.manRestitution * clamp((-vn - BALL.softContactSpeed) / BALL.softContactRange, 0, 1);
       const jn = -(1 + e) * vn;
       const tvx = rvx - vn * nx;
       const tvy = rvy - vn * ny;

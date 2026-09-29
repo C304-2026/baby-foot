@@ -40,11 +40,24 @@ describe('physique', () => {
     r.y = RODS[GOALIE].minY;
     freshBall(s, RODS[GOALIE].x, r.y + 160, 0, 0);
     let maxVy = 0;
-    for (let t = 0; t < 20; t++) {
+    for (let t = 0; t < 60; t++) {
       step(s, [{ move: 1, rot: 0, shoot: false, control: false, lift: false }]);
       maxVy = Math.max(maxVy, s.ball.vy);
     }
-    assert.ok(maxVy > ROD.maxSpeed);
+    assert.ok(maxVy > 1000);
+  });
+
+  it('pousse doucement une balle arrêtée avec un petit déplacement', () => {
+    const s = createSimState();
+    const r = s.rods[GOALIE];
+    freshBall(s, RODS[GOALIE].x, r.y + 40, 0, 0);
+    let maxVy = 0;
+    // Tapotement de 50 ms.
+    for (let t = 0; t < 40; t++) {
+      step(s, [{ move: t < 6 ? 1 : 0, rot: 0, shoot: false, control: false, lift: false }]);
+      maxVy = Math.max(maxVy, s.ball.vy);
+    }
+    assert.ok(maxVy > 0 && maxVy < 400, `vy=${maxVy}`);
   });
 
   it('frappe chargée plus puissante que frappe rapide', () => {
