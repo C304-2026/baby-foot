@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Babyfoot Néon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Inter:wght@500;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="hud">
+      <div id="scoreboard">
+        <span class="team t0">NÉON</span>
+        <span id="score0" class="score t0">0</span>
+        <span class="sep">:</span>
+        <span id="score1" class="score t1">0</span>
+        <span class="team t1">BOT</span>
+      </div>
+      <div id="goal-banner"></div>
+      <div id="bottom">
+        <div id="rods"></div>
+        <div id="gauge"><div id="gauge-fill"></div><span>PUISSANCE</span></div>
+      </div>
+      <div id="info"></div>
+      <div id="help">
+        <h2>Entraînement</h2>
+        <table>
+          <tr><td><kbd>W</kbd>/<kbd>S</kbd> <small>(Z/S en AZERTY)</small></td><td>Monter / descendre la barre</td></tr>
+          <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>Rotation des joueurs (passe, dribble, amorti)</td></tr>
+          <tr><td><kbd>Espace</kbd> / <kbd>↑</kbd></td><td>Tirer : appui court = frappe rapide, maintenu = chargée</td></tr>
+          <tr><td><kbd>↓</kbd></td><td>Lever les joueurs (laisser passer la balle)</td></tr>
+          <tr><td><kbd>Shift</kbd></td><td>Contrôle : colle la balle au pied (1,5 s max)</td></tr>
+          <tr><td><kbd>Tab</kbd> / <kbd>Q</kbd> <kbd>E</kbd></td><td>Changer de barre (sinon auto)</td></tr>
+          <tr><td><kbd>R</kbd></td><td>Réengager la balle</td></tr>
+          <tr><td><kbd>B</kbd></td><td>Activer / couper le bot adverse</td></tr>
+          <tr><td><kbd>H</kbd></td><td>Afficher / masquer l'aide</td></tr>
+        </table>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

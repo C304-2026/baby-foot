@@ -1,0 +1,99 @@
+:root {
+  --bg: #05060f;
+  --t0: #22e5ff;
+  --t1: #ff2bd6;
+  --accent: #ffe14d;
+  --text: #e9ecff;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, sans-serif;
+  user-select: none;
+}
+
+#app, #app canvas { position: fixed; inset: 0; display: block; }
+
+#hud { position: fixed; inset: 0; pointer-events: none; }
+
+#scoreboard {
+  position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 14px;
+  padding: 8px 22px; border-radius: 14px;
+  background: rgba(10, 12, 30, 0.7); backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: Orbitron, sans-serif;
+}
+#scoreboard .team { font-size: 13px; letter-spacing: 3px; opacity: 0.85; }
+#scoreboard .score { font-size: 34px; font-weight: 900; min-width: 32px; text-align: center; transition: transform 0.15s; }
+#scoreboard .score.bump { transform: scale(1.5); }
+#scoreboard .sep { font-size: 26px; opacity: 0.4; }
+.t0 { color: var(--t0); text-shadow: 0 0 12px var(--t0); }
+.t1 { color: var(--t1); text-shadow: 0 0 12px var(--t1); }
+
+#goal-banner {
+  position: absolute; top: 38%; left: 50%;
+  transform: translate(-50%, -50%) scale(0.4);
+  font-family: Orbitron, sans-serif; font-weight: 900; font-size: 96px; letter-spacing: 8px;
+  opacity: 0; transition: transform 0.35s cubic-bezier(.2, 1.6, .4, 1), opacity 0.2s;
+}
+#goal-banner.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+#bottom {
+  position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+
+#rods { display: flex; gap: 8px; }
+#rods .rod {
+  padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
+  background: rgba(10, 12, 30, 0.7); border: 1px solid rgba(34, 229, 255, 0.25); color: rgba(233, 236, 255, 0.55);
+  transition: all 0.12s;
+}
+#rods .rod.active { color: #041018; background: var(--t0); box-shadow: 0 0 16px var(--t0); border-color: var(--t0); }
+
+#gauge {
+  position: relative; width: 280px; height: 14px; border-radius: 7px;
+  background: rgba(10, 12, 30, 0.8); border: 1px solid rgba(255, 255, 255, 0.12); overflow: hidden;
+  opacity: 0.35; transition: opacity 0.15s;
+}
+#gauge.on { opacity: 1; }
+#gauge-fill {
+  position: absolute; inset: 0; width: 0%;
+  background: linear-gradient(90deg, var(--t0), var(--accent), #ff4d4d);
+  box-shadow: 0 0 12px var(--accent);
+}
+#gauge span {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font-size: 9px; letter-spacing: 3px; font-weight: 700; color: rgba(255, 255, 255, 0.8); mix-blend-mode: difference;
+}
+
+#info { position: absolute; top: 14px; right: 16px; font-size: 12px; opacity: 0.6; text-align: right; line-height: 1.6; }
+
+#help {
+  position: absolute; top: 14px; left: 16px; max-width: 420px;
+  padding: 12px 16px; border-radius: 12px; font-size: 12.5px;
+  background: rgba(10, 12, 30, 0.75); border: 1px solid rgba(255, 255, 255, 0.08);
+}
+#help.hidden { display: none; }
+#help h2 { margin: 0 0 8px; font-family: Orbitron, sans-serif; font-size: 13px; letter-spacing: 3px; color: var(--t0); }
+#help td { padding: 2px 10px 2px 0; vertical-align: top; }
+#help td:first-child { white-space: nowrap; }
+#help small { opacity: 0.6; }
+#help .hint { margin: 8px 0 0; opacity: 0.7; }
+kbd {
+  display: inline-block; padding: 1px 6px; border-radius: 4px; font: 700 11px Inter, sans-serif;
+  background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 700px) {
+  #help { display: none; }
+  #goal-banner { font-size: 56px; }
+  #gauge { width: 200px; }
+}
