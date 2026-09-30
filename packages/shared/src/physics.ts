@@ -93,15 +93,19 @@ function updateRod(s: SimState, i: number, cmd: RodCommand) {
   // Translation : démarrage immédiat mais lent, montée en vitesse progressive
   // (dosage fin au tapotement), arrêt et changement de sens instantanés.
   const targetV = clamp(cmd.move, -1, 1) * ROD.maxSpeed;
-  const speedingUp = targetV !== 0 && Math.sign(targetV) === Math.sign(r.vy) && Math.abs(targetV) > Math.abs(r.vy);
-  if (targetV === 0 || Math.sign(targetV) !== Math.sign(r.vy)) {
-    // Arrêt ou demi-tour : on repart de la vitesse de départ.
-    const start = Math.min(Math.abs(targetV), ROD.startSpeed);
-    r.vy = Math.sign(targetV) * start;
-  } else if (speedingUp) {
-    r.vy += Math.sign(targetV) * Math.min(ROD.rampAccel * DT, Math.abs(targetV) - Math.abs(r.vy));
+  if (cmd.move === 0 && cmd.targetY !== undefined) {
+    r.vy = clamp((clamp(cmd.targetY, def.minY, def.maxY) - r.y) / DT, -ROD.maxSpeed, ROD.maxSpeed);
   } else {
-    r.vy = targetV;
+    const speedingUp = targetV !== 0 && Math.sign(targetV) === Math.sign(r.vy) && Math.abs(targetV) > Math.abs(r.vy);
+    if (targetV === 0 || Math.sign(targetV) !== Math.sign(r.vy)) {
+      // Arrêt ou demi-tour : on repart de la vitesse de départ.
+      const start = Math.min(Math.abs(targetV), ROD.startSpeed);
+      r.vy = Math.sign(targetV) * start;
+    } else if (speedingUp) {
+      r.vy += Math.sign(targetV) * Math.min(ROD.rampAccel * DT, Math.abs(targetV) - Math.abs(r.vy));
+    } else {
+      r.vy = targetV;
+    }
   }
   let y = r.y + r.vy * DT;
   if (y < def.minY) {

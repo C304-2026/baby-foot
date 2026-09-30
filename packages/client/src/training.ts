@@ -12,10 +12,16 @@ import {
 } from '@babyfoot/shared';
 import type { Sfx } from './audio.ts';
 import type { Keyboard } from './input.ts';
+import type { Pointer } from './pointer.ts';
 import type { Renderer, View } from './render/renderer.ts';
 
 const ROLE_LABEL: Record<RodRole, string> = { goal: 'GARDIEN', def: 'DÉFENSE', mid: 'MILIEU', att: 'ATTAQUE' };
 const HYSTERESIS = 25;
+/** Trackpad : unités monde par pixel (vertical) et rotation par pixel (horizontal). */
+const PAD_SENS_Y = 0.8;
+const PAD_SENS_ROT = 1 / 60;
+/** Retour des pieds au neutre quand le doigt s'arrête (1/s). */
+const PAD_ROT_RETURN = 8;
 
 /** Mode entraînement solo : simulation locale à pas fixe, rendu interpolé. */
 export class Training {
@@ -28,6 +34,9 @@ export class Training {
   private readonly mine = rodsOfTeam(0);
   private bot: Bot | null = new Bot(1, rodsOfTeam(1), 0.55);
   private active = this.mine[0];
+  private padRod = -1;
+  private padY = 0;
+  private padRot = 0;
   private manual = false;
   private autoPick = this.mine[0];
   private cmds: (RodCommand | undefined)[] = [];
@@ -48,6 +57,7 @@ export class Training {
 
   constructor(
     private kb: Keyboard,
+    private pointer: Pointer,
     private renderer: Renderer,
     private sfx: Sfx,
   ) {
@@ -103,6 +113,20 @@ export class Training {
     if (!this.manual && !busy) this.active = this.autoPick;
   }
 
+  /** Trackpad : la position visée suit le doigt, les pieds reviennent seuls au neutre. */
+  private updatePad(dt: number) {
+    const [dx, dy] = this.pointer.consume();
+    const def = RODS[this.active];
+    if (this.padRod !== this.active) {
+      this.padRod = this.active;
+      this.padY = this.sim.rods[this.active].y;
+      this.padRot = 0;
+    }
+    this.padY = Math.min(def.maxY, Math.max(def.minY, this.padY + dy * PAD_SENS_Y));
+    this.padRot *= Math.exp(-dt * PAD_ROT_RETURN);
+    this.padRot = Math.min(1, Math.max(-1, this.padRot + dx * PAD_SENS_ROT));
+  }
+
   frame(dtReal: number) {
     const dt = Math.min(dtReal, 0.25);
     this.time += dt;
@@ -111,14 +135,22 @@ export class Training {
     if (this.kb.consume('bot')) this.bot = this.bot ? null : new Bot(1, rodsOfTeam(1), 0.55);
     if (this.kb.consume('help')) this.el.help.classList.toggle('hidden');
     this.selectRod();
+    this.updatePad(dt);
 
     this.acc += dt;
     while (this.acc >= DT) {
       this.snapshot();
       this.cmds.length = 0;
-      this.cmds[this.active] = this.kb.command();
+      const cmd = this.kb.command();
+      if (this.pointer.locked) {
+        if (cmd.move === 0) cmd.targetY = this.padY;
+        if (cmd.rot === 0) cmd.rot = this.padRot;
+      }
+      this.cmds[this.active] = cmd;
       this.bot?.commands(this.sim, this.cmds);
       step(this.sim, this.cmds);
+      // Au clavier, la cible trackpad suit la barre pour éviter un saut au retour du doigt.
+      if (cmd.move !== 0) this.padY = this.sim.rods[this.active].y;
       for (const e of this.sim.events) this.onEvent(e);
       this.acc -= DT;
     }
@@ -189,7 +221,8 @@ export class Training {
       this.el.info.innerHTML =
         `${this.fps} FPS · sim 120 Hz<br>` +
         `balle ${Math.round(Math.hypot(b.vx, b.vy))} mm/s<br>` +
-        `bot ${this.bot ? 'ON' : 'OFF'} (B) · mode ${this.manual ? 'manuel' : 'auto'}`;
+        `bot ${this.bot ? 'ON' : 'OFF'} (B) · mode ${this.manual ? 'manuel' : 'auto'}<br>` +
+        (this.pointer.locked ? 'trackpad actif · Échap pour quitter' : 'clic sur le jeu = trackpad');
     }
   }
 }

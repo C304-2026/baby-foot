@@ -10,6 +10,11 @@ export interface RodCommand {
   control: boolean;
   /** Lever les joueurs (pieds à l'horizontale) pour laisser passer la balle. */
   lift: boolean;
+  /**
+   * Position visée de la barre (trackpad / souris). Prioritaire sur `move` quand
+   * celui-ci vaut 0 : la barre suit le doigt, vitesse bornée à ROD.maxSpeed.
+   */
+  targetY?: number;
 }
 
 export const NEUTRAL_COMMAND: Readonly<RodCommand> = { move: 0, rot: 0, shoot: false, control: false, lift: false };

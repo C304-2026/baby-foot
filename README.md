@@ -33,6 +33,7 @@ La simulation (`packages/shared`) est la même côté client et serveur : le ser
 
 | Touche | Action |
 | --- | --- |
+| Trackpad / souris | Cliquer une fois sur le jeu, puis glisser le doigt sans appuyer : haut/bas = barre, gauche/droite = joueurs. `Échap` pour quitter |
 | `W` / `S` (Z/S en AZERTY) | Monter / descendre la barre active |
 | `←` / `→` | Rotation des joueurs : passe, dribble, amorti |
 | `↓` | Lever les joueurs pour laisser passer la balle |

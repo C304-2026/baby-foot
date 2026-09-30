@@ -1,6 +1,7 @@
 import { Application } from 'pixi.js';
 import { Sfx } from './audio.ts';
 import { Keyboard } from './input.ts';
+import { Pointer } from './pointer.ts';
 import { Renderer } from './render/renderer.ts';
 import { Training } from './training.ts';
 import './style.css';
@@ -22,7 +23,9 @@ async function main() {
   const renderer = new Renderer(app);
   app.renderer.on('resize', () => renderer.resize());
 
-  const game = new Training(kb, renderer, sfx);
+  const pointer = new Pointer(app.canvas);
+  app.canvas.addEventListener('pointerdown', () => sfx.unlock());
+  const game = new Training(kb, pointer, renderer, sfx);
   app.ticker.maxFPS = 0;
   app.ticker.add((t) => game.frame(t.deltaMS / 1000));
 
